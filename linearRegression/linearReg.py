@@ -6,7 +6,6 @@ from numpy import *
 import math
 import sys
 
-
 def loadDataSet(filename):
     f = open(filename)
     lines = f.readlines()
@@ -59,10 +58,11 @@ def linearReg(dataSet, labels):
         z = np.dot(dataSetMat, weights)+b
         # this is A set()
         y_hat = sigmoidOnEle(z)
-        
-        weights = weights - alpha * np.dot(dataSetMat.transpose(),(y_hat - labelMat))
-
-        b = b - alpha * 1.0 * sum((y_hat - labelMat)) / m
+        error_martrix = y_hat - labelMat
+        dz = (1.0 / m) * np.dot(dataSetMat.transpose(),error_martrix)
+        weights = weights - alpha * dz
+        db = (1.0 /m) * np.sum(error_martrix)
+        b = b - alpha * db
 
     return weights, b
 
@@ -72,6 +72,17 @@ if __name__ == '__main__':
     filename = sys.argv[1]
     dataSet, labels = loadDataSet(filename)
     w,b= linearReg(dataSet, labels)
-    print(w)
-    print(b)
-    
+    #print(w)
+    #print(b)
+ 
+    # some test
+    test_data = mat(dataSet[0:10])
+    test_labels = mat(labels[0:10])
+
+    y_hat = np.dot(test_data,w) + b 
+
+   
+
+
+
+
