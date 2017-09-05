@@ -20,7 +20,6 @@ def loadDataSet(filename):
     return dataSet, labels
 
 def sigmoid(num):
-    #print(num)
     return 1.0 / (1+math.exp(-num))
 
 # loss function, forcast => y_hat, real=>labels and y
@@ -74,7 +73,7 @@ if __name__ == '__main__':
     w,b= linearReg(dataSet, labels)
     #print(w)
     #print(b)
- 
+    
     # some test
     test_data = mat(dataSet[0:10])
     test_labels = mat(labels[0:10])
@@ -82,7 +81,3 @@ if __name__ == '__main__':
     y_hat = np.dot(test_data,w) + b 
 
    
-
-
-
-
