@@ -14,7 +14,8 @@ def loadDataSet(filename):
     for i in lines:
         i = i.strip()
         cols = i.split("\t")
-        dataSet.append([float(cols[0]), float(cols[1])])
+
+        dataSet.append(list(map(lambda a:float(a), cols[0:-1])))
         labels.append(float(cols[-1]))
     f.close()
     return dataSet, labels
@@ -48,7 +49,7 @@ def linearReg(dataSet, labels):
     dataSetMat = mat(dataSet)
     labelMat = mat(labels).transpose()
     alpha = 0.001
-    maxCycles = 500
+    maxCycles = 1000
     m,n = shape(dataSet)
     weights = zeros((n,1))
     b = 0
@@ -71,13 +72,13 @@ if __name__ == '__main__':
     filename = sys.argv[1]
     dataSet, labels = loadDataSet(filename)
     w,b= linearReg(dataSet, labels)
-    #print(w)
-    #print(b)
+    print(w)
+    print(b)
     
     # some test
-    test_data = mat(dataSet[0:10])
-    test_labels = mat(labels[0:10])
+    #test_data = mat(dataSet[0:10])
+    #test_labels = mat(labels[0:10])
 
-    y_hat = np.dot(test_data,w) + b 
+    #y_hat = np.dot(test_data,w) + b 
 
    
