@@ -61,7 +61,7 @@ def linearReg(dataSet, labels):
         error_martrix = y_hat - labelMat
         dz = (1.0 / m) * np.dot(dataSetMat.transpose(),error_martrix)
         weights = weights - alpha * dz
-        db = (1.0 /m) * np.sum(error_martrix)
+        db = (1.0 / m) * np.sum(error_martrix)
         b = b - alpha * db
 
     return weights, b
