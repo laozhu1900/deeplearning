@@ -3,6 +3,7 @@
 import numpy as np
 from numpy import *
 import random
+import sys
 # eg:data: x:[[1,2],[3,4],[5,6]], x1=[1,2],x2=[3,4],x3=[5,6]
 
 def loadDataSet(filename):
@@ -24,7 +25,7 @@ def relu(z):
     if z >0:
         return z
     else:
-        retrun 0
+        return 0
 
 def reluOnMatEle(matrix):
     m,n = shape(matrix)
@@ -43,7 +44,7 @@ def reluOnMatEle(matrix):
   columns: column's num is hidden-layer's num
 '''
 def initWeights(rows, columns):
-    matrix = np.random.random((rows, columns))
+    matrix = np.random.rand((rows, columns)) * 0.01
     return matrix
 
 '''
@@ -53,57 +54,89 @@ def initWeights(rows, columns):
       | x1 x2 x3 |      | - w1 - |
   X = | x1 x2 x3 |  WT =| - w2 - | 
       | x1 x2 x3 |      | - w3 - |
+  m => x1.....xm
+  n => len(w1)
+ 
+  zList: to save each layer's z
+  forword neural network
+  backprop neural network
+
 '''
-def neuralNet(dataSet, labels):
+
+
+# layer: the layers of neural network,    maxCycles:  max loops for training neural network
+def neuralNet(dataSet, labels, layer, maxCycles):
+    
+    alpha = 0.01
+
+    listA = []
+    listZ = []
+
+    #dWList = []
+    #dBList = []
+
+    listW = []
+    listB = []
+
+
+    # init echo lays' weight and b
+    for i in range(layer):
+        listB.append(initWeights(m+1,n))
+        listW.append(np.random.random((rows, 1)))
+
+
+    # dataSet and real values
     dataSetMat = mat(dataSet).transpose()
     labelMat = mat(labels)
-    # m => x1.....xm
-    # n => len(w1)
-    
-    '''
-     z_set: to save each layer's z
-     forword neural network
-     backprop neural network
-    '''
-    z_set = []
-    a_set = []
-
-    m, n = shape(dataSetMat) 
-    w_1 = initWeights(m+1,n)
-    b_1 = np.random.random((rows, 1))
-    
-    layer_1_z = np.dot(dataSetMat, w_1.transpose())+b_1
-    layer_1_a = reluOnMatEle(layer_1_z)
-    z_set.append(layer_1_z)
-    a_set.append(layer_1_a)
-
-    w_2 = initWeights(m+1,n)
-    b_2 = np.random.random((rows, 1))
-    
-    layer_2_z = np.dot(layer_1_a, w_2.transpose())+b_2
-    layer_2_a = reluOnMatEle(layer_2_z)
-    z_set.append(layer_2_z)
-    a_set.append(layer_2_a)
-
-    # backprop neural network
-    
-    dz_2 = layer_2_a - labelMat
-    dw_2 = (1.0 / m) * dz_2 * a_set[1].transpose()
-    db_2 = (1.0 / m) * np.sum(dz_2,axis=1,keepdims = True)
-    
-    dz_1 = layer_1_a - labelMat
-    dw_1 = (1.0 / m) * dz_1 * a_set[0].transpose()
-    db_1 = (1.0 / m) * np.sum(dz_2,axis=1,keepdims = True)
     
 
-    
+    # the main function for neural network
+    # recursive function for neural network
+    def loopNN(dataSetMat, labelMat, loopLayer):
+
+        m,n = shape(dataSetMat)
+        
+        # forword neural network
+        z = np.dot(dataSetMat, w_1.transpose())+b_1
+        a = reluOnMatEle(listZ[layer-loopLayer])
+        listZ.append(z)
+        listA.append(a)
+   
+   
+        # backprop neural network
+        dZ = a - labelMat 
+        dW = (1.0 / m) * dZ * a.transpose()
+        dB =  (1.0 / m) * np.sum(dZ,axis=1,keepdims = True)
+        
+        listW[layer - loopLayer] = listW[layer - loopLayer] - alpha * dW
+        listB[layer - loopLayer] = listB[layer - loopLayer] - alpha * dB
 
         
+        #dWList.append(dW)
+        #dBList.append(dB)
 
+        loopLayer -=1
 
+        if(loopLayer>0):
 
-
-
+            return loopNN(a, labelMat, loopLayer)
+        else:
+            return listW, listB
 
     
+    for i in range(maxCycles):
+
+        listW, listB = loopNN(dataSetMat, labelMat, layer)
+
+    return listW, listB
+
+
+if __name__ == '__main__':
+    
+    filename = sys.argv[1]
+    
+    dataSetMat, labelMat = loadDataSet(filename)
+
+    print(neuralNet(dataSetMat, labelMat))
+
 
