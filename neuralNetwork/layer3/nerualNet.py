@@ -62,10 +62,10 @@ def calculate_loss(model):
     probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
     # Calculating the loss
 
-    print(11111111)
-    print(probs)
+    #print(11111111)
+    #print(probs)
     
-    time.sleep(100)
+    #time.sleep(10)
     corect_logprobs = -np.log(probs[range(num_examples), y])
     data_loss = np.sum(corect_logprobs)
     # Add regulatization term to loss (optional)
@@ -149,7 +149,7 @@ def test_2():
 
 
 if __name__ == '__main__':
-    print(y)
-    print(12121)
-    print(X)
+    #print(y)
+    #print(12121)
+    #print(X)
     test_1()
