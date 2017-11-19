@@ -85,8 +85,3 @@ train_neural_networl(x)
 
 
 
-
-   
-
-
-
